@@ -61,3 +61,4 @@ plt.legend()
 plt.rcParams['svg.fonttype'] = 'none'
 
 plt.savefig(f'./figS10-data/figureS10.svg', format='svg')
+plt.show()

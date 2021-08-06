@@ -2,3 +2,4 @@ __pycache__
 figures/*-data/*
 .DS_Store
 *.swp
+ga_results/*

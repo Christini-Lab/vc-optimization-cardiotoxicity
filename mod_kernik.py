@@ -28,8 +28,8 @@ class KernikModel(CellModel):
     f_coulomb_per_mmole = 96.4853415
 
     Ko = 5.4 # millimolar (in model_parameters)
-    Cao = 2.0  # millimolar (in model_parameters
-    Nao = 137  # millimolar (in model_parameters)
+    Cao = 1.8 #our exp conditions is 2.0  # millimolar (in model_parameters
+    Nao = 140 # our exp conditions 137 # millimolar (in model_parameters)
 
     # half-saturation constant millimolar (in i_NaK)
     Km_Na = 40
@@ -167,7 +167,6 @@ class KernikModel(CellModel):
         # Reversal Potentials:
         if self.nai_millimolar is not None:
             y[3] = self.nai_millimolar
-
         try:
             E_Ca = (0.5 * self.r_joule_per_mole_kelvin * self.t_kelvin / 
                     self.f_coulomb_per_mmole * log(self.Cao / y[2]))  # millivolt
@@ -175,6 +174,7 @@ class KernikModel(CellModel):
             print(f'Intracellular Calcium calcium negative at time {t}')
             y[2] = 4.88E-5
             E_Ca = 0.5 * self.r_joule_per_mole_kelvin * self.t_kelvin / self.f_coulomb_per_mmole * log(self.Cao / y[2])  # millivolt
+
         E_Na = self.r_joule_per_mole_kelvin * self.t_kelvin / self.f_coulomb_per_mmole * log(self.Nao / y[3])  # millivolt
 
         if self.ki_millimolar:
