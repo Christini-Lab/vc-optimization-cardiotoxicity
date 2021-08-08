@@ -131,27 +131,3 @@ class VoltageOptimizationConfig(GeneticAlgorithmConfig):
         self.step_types = step_types
         self.with_artefact = with_artefact
         self.model_name = model_name
-
-
-class CombinedVCConfig:
-    """Config for building a VC protocol from smaller VC protocols.
-
-    Attributes:
-        currents: A list of currents to use during optimization.
-        step_range: When building smaller VC protocols, vary steps between
-            `step_range` when running the genetic algorithm.
-        adequate_fitness_threshold: When building smaller VC protocols, return
-            the protocol if its fitness is greater than this, else continue
-            using GA with larger number of steps.
-        ga_config: A config file storing genetic algorithm hyperparameters.
-    """
-
-    def __init__(self,
-                 currents: List[str],
-                 step_range: range,
-                 adequate_fitness_threshold: float,
-                 ga_config: VoltageOptimizationConfig) -> None:
-        self.currents = currents
-        self.step_range = step_range
-        self.adequate_fitness_threshold = adequate_fitness_threshold
-        self.ga_config = ga_config

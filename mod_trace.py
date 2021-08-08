@@ -497,14 +497,16 @@ class Trace:
             ax.spines['right'].set_visible(False)
             ax.spines['top'].set_visible(False)
 
-        if is_shown:
-            plt.show()
-
         if saved_to:
             plt.rcParams['svg.fonttype'] = 'none'
             plt.savefig(saved_to, format='svg')
+
+        if is_shown:
+            plt.show()
+            return
+
+        if saved_to:
             plt.close(fig)
-            
 
     def plot_with_individual_currents(self, currents=[],
                                       with_artefacts=False, is_shown=True):

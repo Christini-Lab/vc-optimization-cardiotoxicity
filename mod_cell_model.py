@@ -4,9 +4,6 @@ import numpy as np
 from scipy import integrate
 from scipy.signal import argrelextrema
 
-#from cell_models import protocols, trace
-#from cell_models.current_models import ExperimentalArtefactsThesis
-#from cell_models.protocols import VoltageClampProtocol
 import mod_protocols as protocols
 import mod_trace as trace
 from mod_current_models import ExperimentalArtefactsThesis

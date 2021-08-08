@@ -7,11 +7,13 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
+
 class SpontaneousProtocol:
     """Encapsulates state and behavior of a single action potential protocol."""
 
     def __init__(self, duration=1800):
         self.duration = duration
+
 
 class PacedProtocol:
     """
@@ -41,6 +43,7 @@ class PacedProtocol:
         self.pace = pace
         self.stim_end = stim_end
         self.stim_start = stim_start
+
 
 class IrregularPacingProtocol:
     """Encapsulates state and behavior of a irregular pacing protocol.
@@ -83,6 +86,8 @@ class IrregularPacingProtocol:
 
     def make_offset_generator(self):
         return (i for i in self._stimulation_offsets)
+
+
 
 class VoltageClampStep:
     """A step in a voltage clamp protocol."""
