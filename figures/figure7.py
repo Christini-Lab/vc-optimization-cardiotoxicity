@@ -5,7 +5,7 @@ from scipy import signal
 from scipy.optimize import curve_fit
 from cell_models import protocols
 
-import heka_reader
+import figs_heka_reader as heka_reader
 
 #file 17_003 has channels 1, 2, and 4. Channel 1 is the only one worth using
 #0, 0, 0-ch is some sort of test

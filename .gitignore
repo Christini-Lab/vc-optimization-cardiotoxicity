@@ -1,5 +1,8 @@
 __pycache__
-figures/*-data/*
 .DS_Store
 *.swp
 ga_results/*
+*/__pycache__
+figures/*-data/*
+figures/exp_data/cell_metadata/*
+figures/exp_data/cells/*

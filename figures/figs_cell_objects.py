@@ -227,7 +227,7 @@ class ExpDat():
                 ap1 = find_peaks(-recorded_data['Current (pA/pF)'].values,
                         height=0, distance=1000)[0][1]
 
-                new_dat = recorded_data.iloc[ap1-500:ap1+4000].copy()
+                new_dat = recorded_data.iloc[ap1-1500:ap1+4000].copy()
 
                 new_dat['Time (s)'] = new_dat['Time (s)'] - new_dat['Time (s)'].min()
 
@@ -1044,8 +1044,6 @@ class ExpDat():
             if 'paced' not in self.trials[span].keys():
                 continue
             trial = self.trials[span]['paced']
-            dat = get_exp_as_df(self.h5file, trial[0], self.cm,
-                        is_filtered=True, t_range=trial[1])
             paced_aps = self.get_paced_aps(trial, pace)
 
             aps_stats = {
@@ -1063,22 +1061,22 @@ class ExpDat():
                     'apd90': [],
                     'triangulation': []
                     }
-            
+
             ap_apds = []
-            for ap in paced_aps:
+            for ap in paced_aps[2:5]:
                 temp_t, temp_v, temp_c = ap
                 didt_max_idx_plus_one = np.diff(temp_c).argmax() + 1
                 dvdt_max_idx = didt_max_idx_plus_one + np.diff(
-                        temp_v[didt_max_idx_plus_one:]).argmax() 
+                        temp_v[didt_max_idx_plus_one:]).argmax()
+                if temp_v[dvdt_max_idx] < -65:
+                    dvdt_max_idx = np.diff(temp_v).argmax()
                 dvdt_max = (temp_v[dvdt_max_idx+1] - temp_v[dvdt_max_idx]) / (
                         temp_t[dvdt_max_idx+1] - temp_t[dvdt_max_idx])
 
-                temp_t = temp_t - temp_t[dvdt_max_idx]
+                temp_t = temp_t - temp_t[didt_max_idx_plus_one + 30]
 
                 rmp = np.min(temp_v)
-                apa = np.max(temp_v[didt_max_idx_plus_one:]) - rmp
-
-                v_max_idx = np.argmax(temp_v)
+                apa = np.max(temp_v[(didt_max_idx_plus_one+30):]) - rmp
 
                 apds = []
                 for p in range(1, 10):
@@ -1098,7 +1096,6 @@ class ExpDat():
                 aps_stats[f'apd{i*10}'] = ap_apds[:, i-1]
 
             span_ap_data[span] = aps_stats
-
 
         return span_ap_data
 
@@ -1203,23 +1200,28 @@ class ExpDat():
         return [max_curr[0], (max_curr[1] - max_curr[0])]
 
 
-
-
-
 def get_apd(t, v, c, percent=90):
-    didt_max_idx = np.diff(c).argmax()
-    dvdt_max_idx = didt_max_idx + np.diff(
-            v[didt_max_idx:]).argmax() 
+    # start measuring from 0
+    t_0_idx = np.argmin(np.abs(t))
 
     rmp = np.min(v)
-    apa = np.max(v) - rmp
-
-    v_max_idx = np.argmax(v)
+    apa = np.max(v[t_0_idx:]) - rmp
 
     apd_v = rmp + apa * (100-percent)/100
 
-    apd_idx = v_max_idx + np.argmin(np.abs(v[v_max_idx:] - apd_v))
+    apd_idx = t_0_idx + np.argmin(np.abs(v[t_0_idx:] - apd_v))
 
     apd = t[apd_idx]
-    return apd, apd_v
 
+    if apd < 3:
+        dvdt_max_idx = t_0_idx + np.argmax(v[t_0_idx:])
+        apd_idx = dvdt_max_idx + np.argmin(np.abs(v[dvdt_max_idx:] - apd_v))
+        apd = t[apd_idx]
+
+
+
+    if apd < 5:
+        print(f'At {percent}, there is an APD of {apd}')
+    
+    
+    return apd, apd_v

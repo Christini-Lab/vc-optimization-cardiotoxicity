@@ -18,7 +18,7 @@ from cell_models.rtxi.rtxi_data_exploration import explore_data, get_exp_as_df
 from cell_models.ga.target_objective import TargetObjective
 from cell_models import protocols
 
-from cell_objects import *
+from figs_cell_objects import *
 
 
 VIABLE_CELLS = {'control': [7, 13, 14 ,25 ,27 ,28 ,40 ,41 ,43 ,44],
@@ -193,7 +193,7 @@ def plot_fig_5a():
 
 
 def plot_fig_5b():
-    drug_change_data = pd.read_csv('../analyze_experiments/results/cell_change_stats.csv')
+    drug_change_data = pd.read_csv('./exp_data/cell_change_stats.csv')
 
     feature_significance = []
     drug_arr = ['cisapride', 'verapamil', 'quinidine', 'quinine']
