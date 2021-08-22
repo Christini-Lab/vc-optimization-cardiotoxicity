@@ -44,10 +44,10 @@ def figure4_ad():
                 continue
             
             window = 10
-            t = moving_average(dat['Time (s)'].values[0:3000], window)
-            t_c = moving_average(dat['Time (s)'].values[0:3000], 2)
-            c = moving_average(dat['Current (pA/pF)'].values[0:3000], 2)
-            v = moving_average(dat['Voltage (V)'].values[0:3000], window)
+            t = moving_average(dat['Time (s)'].values[1000:4000], window)
+            t_c = moving_average(dat['Time (s)'].values[1000:4000], 2)
+            c = moving_average(dat['Current (pA/pF)'].values[1000:4000], 2)
+            v = moving_average(dat['Voltage (V)'].values[1000:4000], window)
 
             #axs[1].plot(t_c*1000, c, col[i], label=label[i])
             ax.plot(t*1000, v*1000, col[i], label=label[i])
@@ -168,7 +168,7 @@ def figure4_ef():
 
 
 def main():
-    #figure4_ad()
+    figure4_ad()
     figure4_ef()
 
 

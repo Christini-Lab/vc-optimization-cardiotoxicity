@@ -157,13 +157,13 @@ class CellModel:
 
         self.is_no_ion_selective = is_no_ion_selective
 
-        #from cell_models.ga.target_objective import TargetObjective
-
         if isinstance(protocol, protocols.SpontaneousProtocol):
             return self.generate_spontaneous_response(protocol)
         elif isinstance(protocol, protocols.IrregularPacingProtocol):
             return self.generate_irregular_pacing_response(protocol)
         elif isinstance(protocol, protocols.VoltageClampProtocol):
+            return self.generate_VC_protocol_response(protocol)
+        elif 'get_voltage_change_startpoints' in dir(protocol):
             return self.generate_VC_protocol_response(protocol)
         elif isinstance(protocol, protocols.PacedProtocol):
             return self.generate_pacing_response(protocol)

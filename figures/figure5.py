@@ -11,80 +11,8 @@ import pandas as pd
 import seaborn as sns
 from random import shuffle
 
-
-from cell_models import kernik, paci_2018, ohara_rudy
-from cell_models.ga import target_objective
-from cell_models.rtxi.rtxi_data_exploration import explore_data, get_exp_as_df
-from cell_models.ga.target_objective import TargetObjective
-from cell_models import protocols
-
 from figs_cell_objects import *
-
-
-VIABLE_CELLS = {'control': [7, 13, 14 ,25 ,27 ,28 ,40 ,41 ,43 ,44],
-                'cisapride': [8 , 16 , 18 , 21 , 22 , 23],
-                'verapamil': [30 , 31 , 32 , 33 , 34 , 35 , 36 , 37 , 38],
-                'quinidine': [48 , 49 , 51 , 52 , 54 , 55],
-                'quinine': [57 , 58 , 61 , 62 , 63 , 64 , 65 , 66 , 67]}
-
-
-
-def get_cells():
-    """
-        returns Beautiful table and all cells in cell_objects list
-    """
-    table = BeautifulTable()
-    table.column_headers = ["#", "Drug", "Min(Rm)", "Rm/Ra", "AP", "VC", "Drug Exp", "Comp", "OED"]
-
-
-    path = f'../analyze_experiments/results'
-    files = [f for f in listdir(f'{path}/cells')
-            if 'h5' in f]
-    files = [f.split('.')[0] for f in files]
-    files.sort()
-    cell_objects = []
-    for j, f in enumerate(files):
-        f = f.split('.')[0]
-        drug = f.split('_')[-1].capitalize()
-
-        cell_object = ExpDat(path, f, drug)
-
-        art_params = cell_object.artefact_parameters
-
-        vc_rm = ''
-
-        if 'vcp_70_70' in cell_object.trials['Pre-drug'].keys():
-            phases = ['Pre-drug']
-            if 'vcp_70_70' in cell_object.trials['Post-drug'].keys():
-                phases.append('Post-drug')
-
-            vc_rm = ''
-            for i, tri in enumerate(phases):
-                trial = cell_object.trials[tri]['vcp_70_70']
-                rm_b = cell_object.artefact_parameters[:, 0] <= trial
-                rm = cell_object.artefact_parameters[:, 3][rm_b][-1]
-                if i == 0:
-                    vc_rm += f'{rm}'
-                else:
-                    vc_rm += f'-->{rm}' 
-
-        min_rm_over_ra = (art_params[:, 3] / art_params[:, 2]).min()
-
-        is_ap = ('Y' if 'paced' in cell_object.trials['Pre-drug'].keys() else ' ')
-        is_vc = ('Y' if 'vcp_70_70' in
-                cell_object.trials['Pre-drug'].keys() else ' ')
-        is_drug = ('Y' if 'paced' in 
-                cell_object.trials['Post-drug'].keys() else ' ')
-        is_comp = ('Y' if 'rscomp_80' in 
-                cell_object.trials['Compensation'].keys() else ' ')
-        is_oed = ('Y' if 'proto_O' in 
-                cell_object.trials['Pre-drug'].keys() else ' ')
-
-        table.append_row([j, cell_object.drug, vc_rm, min_rm_over_ra,
-            is_ap, is_vc, is_drug, is_comp, is_oed])
-        cell_objects.append(cell_object)
-
-    return table, cell_objects, files
+from utility_funcs import get_cell_objects
 
 
 def pick_cell():
@@ -105,9 +33,9 @@ def moving_average(x, n=10):
 
 
 def plot_fig_5a():
-    table, cell_objects, files = get_cells()
-    which_cell = 65
+    files, cell_objects = get_cell_objects()
 
+    which_cell = 37
     cell = cell_objects[which_cell]
 
     col = ['k', 'r']
@@ -139,7 +67,6 @@ def plot_fig_5a():
         axs[1].plot(t*1000, c, col[i], label=label[i])
 
         i += 1
-
 
     for ax in axs:
         ax.spines['right'].set_visible(False)
@@ -196,17 +123,14 @@ def plot_fig_5b():
     drug_change_data = pd.read_csv('./exp_data/cell_change_stats.csv')
 
     feature_significance = []
-    drug_arr = ['cisapride', 'verapamil', 'quinidine', 'quinine']
+    drug_arr = ['Cisapride', 'Verapamil', 'Quinidine', 'Quinine']
 
-    for feature in drug_change_data.columns[2:]:
+    for feature in drug_change_data.columns[3:]:
         for i, drug in enumerate(drug_arr):
             control = drug_change_data.loc[
-                    drug_change_data['drug_type'] == 'control']
+                    drug_change_data['drug_type'] == 'Control']
             drug_dat = drug_change_data.loc[drug_change_data['drug_type'] == drug]
-            try:
-                t_vals = ttest_ind(control[feature].values, drug_dat[feature].values)
-            except:
-                continue
+            t_vals = ttest_ind(control[feature].values, drug_dat[feature].values)
 
             if t_vals.pvalue < .05:
                 print(f'The p-value when comparing the {feature} of {drug} is {t_vals.pvalue}')
@@ -270,7 +194,7 @@ def plot_fig_5b():
 
 
 def plot_fig_5cde(p_val=.05):
-    table, cell_objects, files = get_cells()
+    files, cell_objects = get_cell_objects()
 
     w_models = 'n'
     drug_switch = {'c': 'Cisapride',
@@ -278,8 +202,6 @@ def plot_fig_5cde(p_val=.05):
                    'qd': 'Quinidine',
                    'qn': 'Quinine',
                    'a': 'All'}
-    all_viable_cells = [v for k, v in VIABLE_CELLS.items()]
-    all_viable_cells = [v for sub in all_viable_cells for v in sub]
 
     for which_drug in ['c', 'qd','qn']:
         fig, axs = plt.subplots(2, 1, sharex=True, figsize=(10, 8))
@@ -293,9 +215,6 @@ def plot_fig_5cde(p_val=.05):
                 'Verapamil': [], 'Quinidine': [], 'Quinine': []}
 
         for i, cell_object in enumerate(cell_objects):
-            if i not in all_viable_cells:
-                continue
-
             drug_type = cell_object.drug
 
             idx_range = [8500, 8900]
@@ -303,7 +222,6 @@ def plot_fig_5cde(p_val=.05):
             vc_dat = cell_object.get_vc_data(is_filtered=False)
 
             recorded_data = vc_dat['Pre-drug'][idx_range[0]:idx_range[1]]
-
 
             dat = cell_object.get_subtracted_drug_data('pred_comp')
             dat = (dat.iloc[idx_range[0]:idx_range[1]]
@@ -456,11 +374,10 @@ def get_subtracted_functional_t(drug_sub_dat, nperm=200, p=.05,
     return span_dat
 
 
-
 def main():
-    #plot_fig_5a()
+    plot_fig_5a()
     plot_fig_5b()
-    #plot_fig_5cde()
+    plot_fig_5cde()
 
 
 if __name__ == '__main__':

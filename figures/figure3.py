@@ -61,31 +61,21 @@ def plot_fig_3ab():
             ax.tick_params(axis='x', labelsize=12)
             ax.tick_params(axis='y', labelsize=12)
 
-        #if type_trial != 'spont':
-        #    axs[1].set_xlabel('Time (ms)', fontsize=14)
-        #    axs[1].set_ylabel('Current (pA/pF)', fontsize=14)
-        #    axs[0].set_ylabel('Voltage (mV)', fontsize=14)
-        #else:
         axs[0].set_xlabel('Time (ms)', fontsize=14)
         axs[0].set_ylabel('Voltage (mV)', fontsize=14)
 
 
-        #if type_trial == 'spont':
-        #    plt.legend(fontsize=14)
-
         plt.rcParams['svg.fonttype'] = 'none'
 
         plt.savefig(f'./fig3-data/{type_trial}.svg', format='svg')
-        #axs[0].legend()
         plt.show()
 
 
 def plot_fig_3c():
     cell_stats = pd.read_csv('exp_data/cell_stats.csv')
 
-    fig, axs = plt.subplots(1, 2, figsize=(6, 5))
+    fig, axs = plt.subplots(1, 2, figsize=(9, 5))
 
-    axs = [item for sublist in axs for item in sublist]
     columns = ['apd20', 'apd90']
     x_labels = ['APD20 (ms)', 'APD90 (ms)']
 
@@ -109,9 +99,9 @@ def plot_fig_3c():
     plt.show()
 
 
-
 def main():
     plot_fig_3ab()
+    plot_fig_3c()
 
 
 if __name__ == '__main__':

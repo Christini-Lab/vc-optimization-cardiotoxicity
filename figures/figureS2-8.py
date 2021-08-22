@@ -1,10 +1,15 @@
 import pickle
 import matplotlib.pyplot as plt
+import os
 
-from cell_models import kernik
+up1 = os.path.abspath('..')
+os.sys.path.insert(0, up1)
+import mod_kernik as kernik
+import mod_protocols as protocols
 
 
-folder = './figS2-8-data'
+
+folder = './exp_data/ga_results'
 currents = ['I_Na', 'I_To', 'I_Kr', 'I_K1', 'I_CaL', 'I_Ks', 'I_F']
 
 def get_high_fitness(ga_result):
@@ -25,6 +30,5 @@ for i, current in enumerate(currents):
     k = kernik.KernikModel(is_exp_artefact=True)
     tr = k.generate_response(proto, is_no_ion_selective=False)
 
-    tr.plot_currents_contribution(current, is_shown=False,
+    tr.plot_currents_contribution(current, is_shown=True,
             saved_to=f'./figS2-8-data/{current}.svg')
-    #tr.plot_currents_contribution(current)

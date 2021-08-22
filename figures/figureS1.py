@@ -1,5 +1,12 @@
 import matplotlib.pyplot as plt
-from cell_models import kernik, protocols
+import os
+
+up1 = os.path.abspath('..')
+os.sys.path.insert(0, up1)
+import mod_kernik as kernik
+import mod_protocols as protocols
+
+
 
 
 k = kernik.KernikModel()

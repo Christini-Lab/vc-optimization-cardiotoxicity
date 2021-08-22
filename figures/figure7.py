@@ -3,21 +3,16 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from scipy import signal
 from scipy.optimize import curve_fit
-from cell_models import protocols
 
 import figs_heka_reader as heka_reader
 
-#file 17_003 has channels 1, 2, and 4. Channel 1 is the only one worth using
-#0, 0, 0-ch is some sort of test
-#1, 0-10, 0-ch is IV data
-#2, 0-, 0-ch is pharma data
+import os
+up1 = os.path.abspath('..')
+os.sys.path.insert(0, up1)
+import mod_protocols as protocols
 
 
-#Good cells:
-#--> 17_003, ch1
 
-
-#6-1, 4-2, 3-4, 
 file_dat = {'210617_003': [1],
             '210617_004': [1],
             '210616_006': [2],
@@ -33,7 +28,7 @@ capacitances = {'210617_003_1': 6.57E-12,
 
 
 def get_iv_dat(f, ch, is_shown=False):
-    file_name = f'fig7-data/{f}.dat'
+    file_name = f'exp_data/hcn_results/{f}.dat'
     bundle = heka_reader.Bundle(file_name)
     iv_nums = [num for num in range(-20, -130, -10)]
     iv_traces = {} 
@@ -88,9 +83,9 @@ def get_iv_dat(f, ch, is_shown=False):
 
 
 def get_pharm_dat(f, ch, is_shown=False):
-    file_name = f'fig7-data/{f}.dat'
+    file_name = f'exp_data/hcn_results/{f}.dat'
     bundle = heka_reader.Bundle(file_name)
-    pharm_meta = pd.read_csv(f'./fig7-data/{f}_1HCNPharm.xls', sep='\t', index_col=False)
+    pharm_meta = pd.read_csv(f'./exp_data/hcn_results/{f}_1HCNPharm.xls', sep='\t', index_col=False)
 
     avg_curr_dat = {}
     drug_trace_dat = {}
@@ -181,7 +176,7 @@ def smooth_trace(x, w=200):
 
 
 def plot_all_sweeps(f, ch):
-    file_name = f'fig7-data/{f}.dat'
+    file_name = f'exp_data/hcn_results/{f}.dat'
     bundle = heka_reader.Bundle(file_name)
 
     for sweep in range(0, 10):
@@ -366,7 +361,6 @@ def plot_iv_voltage_proto(ax):
     ax.spines['left'].set_visible(False)
 
 
-
 all_conc_pts = []
 all_drug_traces = []
 all_iv_traces = []
@@ -420,7 +414,6 @@ for ax in [ax1, ax2, ax3, ax4, ax5, ax6]:
 
 plt.savefig('./fig7-data/figure7.svg', format='svg')
 plt.show()
-
 
 
 fig, ax = plt.subplots(1, 1, figsize=(12, 8))

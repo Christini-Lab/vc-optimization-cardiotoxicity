@@ -27,7 +27,7 @@ def step_1():
 
     plt.rcParams['svg.fonttype'] = 'none'
 
-    plt.savefig(f"{path_to_data}/fig1b.svg", format='svg', transparent=True)
+    plt.savefig(f"fig1-data/figure1_step1.svg", format='svg', transparent=True)
     plt.show()
 
 
@@ -117,7 +117,7 @@ def step_2():
 
 
 
-    plt.savefig(f'./fig2-data/figure2.svg', format='svg')
+    plt.savefig(f'./fig1-data/figure1_step2.svg', format='svg')
 
     fig.tight_layout()
     plt.show()
@@ -151,7 +151,7 @@ def step_5():
         ax.spines['right'].set_visible(False)
         ax.spines['top'].set_visible(False)
 
-
+    plt.savefig(f"fig1-data/figure1_step3.svg", format='svg', transparent=True)
     plt.show()
 
 
@@ -163,9 +163,9 @@ def moving_average(x, n=10):
 
 
 def get_pharm_dat(f, ch, is_shown=False):
-    file_name = f'fig7-data/{f}.dat'
+    file_name = f'./exp_data/hcn_results/{f}.dat'
     bundle = heka_reader.Bundle(file_name)
-    pharm_meta = pd.read_csv(f'./fig7-data/{f}_1HCNPharm.xls', sep='\t', index_col=False)
+    pharm_meta = pd.read_csv(f'./exp_data/hcn_results/{f}_1HCNPharm.xls', sep='\t', index_col=False)
 
     capacitances = {'210617_003_1': 6.57E-12,
                     '210617_004_1': 11.11E-12,
@@ -352,6 +352,8 @@ def smooth_trace(x, w=200):
     trace = np.convolve(x, np.ones(w), mode='same') / w
     return trace
 
-step_1()
-step_2()
-step_5()
+
+if __name__ == '__main__':
+    step_1()
+    step_2()
+    step_5()

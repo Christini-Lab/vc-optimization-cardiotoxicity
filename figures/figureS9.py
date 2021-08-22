@@ -1,11 +1,18 @@
 from os import listdir
 import pickle
 import numpy as np
+import os
 
-from cell_models import kernik, paci_2018
 import matplotlib.pyplot as plt
 
-path_to_data = f"figS10-data/"
+up1 = os.path.abspath('..')
+os.sys.path.insert(0, up1)
+import mod_kernik as kernik
+import mod_paci_2018 as paci_2018
+import mod_protocols as protocols
+
+
+path_to_data = "exp_data/ga_results"
 
 files = listdir(path_to_data)
 
@@ -60,5 +67,5 @@ for i, max_array in enumerate([combined_currs, kernik_currs, paci_currs]):
 plt.legend()
 plt.rcParams['svg.fonttype'] = 'none'
 
-plt.savefig(f'./figS10-data/figureS10.svg', format='svg')
+plt.savefig(f'./figS9-data/figureS9.svg', format='svg')
 plt.show()
