@@ -6,4 +6,8 @@
 3. Run `ga_make_whole_protocol.py` to shorten each protocol and connect them to form an optimized VC protocol. The final optimized VC protocol will be saved to `shortened_trial_steps_ramps_Kernik_200_50_4_-120_60_holding_500_True.csv`.
 4. Run `ga_plot_opt_protocol.py` to visualize the optimized protocol.
 
-####
+#### Plot manuscript figures
+
+1. `cd` into `/figures`. 
+2. Download all raw experimental data from [HERE](www.FILLTHISIN.com) and extract the data inside `/figures`.
+3. Run figure scripts to generate plots for all main manuscript and supplemental figures.
