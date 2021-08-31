@@ -6,7 +6,7 @@ from scipy.stats import ttest_ind
 from operator import itemgetter
 from itertools import groupby
 import pickle
-from random import shuffle
+from random import shuffle, seed
 import pandas as pd
 import seaborn as sns
 
@@ -78,7 +78,7 @@ def plot_subtracted_data(drug, p_val=.05):
             recorded_data['Voltage (V)']*1000)
 
     spans = get_subtracted_functional_t(drug_sub_dat, drug_name=drug, p=p_val,
-             consec_pts=5)
+             consec_pts=10)
 
 
     cols = ['b', 'r', 'g']
@@ -188,7 +188,8 @@ def plot_subtracted_data(drug, p_val=.05):
 
 
 def get_subtracted_functional_t(drug_sub_dat, drug_name, nperm=200, p=.05,
-        consec_pts=5):
+        consec_pts=10):
+    seed(1)
     idxs = len(drug_sub_dat['control'][0])
     q = 1-p
 
@@ -252,38 +253,6 @@ def get_subtracted_functional_t(drug_sub_dat, drug_name, nperm=200, p=.05,
         span_dat[drug] = new_ranges
 
     return span_dat 
-
-
-def get_simple_t_span(drug_sub_dat, nperm=200, p=.05, consec_pts=5):
-    idxs = len(drug_sub_dat['Control'][0])
-
-    sub_dmso = np.array(drug_sub_dat['control'])
-
-    drug_spans = []
-
-    for drug in ['cisapride', 'verapamil', 'quinidine', 'quinine']:
-        sub_drug = np.array(drug_sub_dat[drug])
-        if sub_drug.size == 0:
-            drug_spans.append([])
-            continue
-
-        p_vals = ttest_ind(sub_dmso, sub_drug).pvalue
-
-        drug_mask = np.where(p_vals < p)[0]
-
-        ranges = []
-        for k, g in groupby(enumerate(drug_mask), lambda ix : ix[0] - ix[1]):
-            group = list(map(itemgetter(1), g))
-            ranges.append((group[0], group[-1]))
-
-        new_ranges = []
-        for ra in ranges:
-            if (ra[1] - ra[0]) > consec_pts:
-                new_ranges.append(ra)
-
-        drug_spans.append(new_ranges)
-
-    return drug_spans[0], drug_spans[1], drug_spans[2], drug_spans[3]
 
 
 def main():

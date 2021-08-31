@@ -9,7 +9,7 @@ from itertools import groupby
 import pickle
 import pandas as pd
 import seaborn as sns
-from random import shuffle
+from random import shuffle, seed
 
 from figs_cell_objects import *
 from utility_funcs import get_cell_objects
@@ -232,7 +232,7 @@ def plot_fig_5cde(p_val=.05):
 
 
         spans = get_subtracted_functional_t(drug_sub_dat, p=p_val,
-                 consec_pts=15, drug_name=drug_switch[which_drug])
+                 consec_pts=10, drug_name=drug_switch[which_drug])
 
         cols = ['b', 'r', 'g']
         labs = [r'Cisapride $\mu_{\Delta I_m}$ p<' + f'{p_val}',
@@ -305,7 +305,8 @@ def plot_fig_5cde(p_val=.05):
 
 
 def get_subtracted_functional_t(drug_sub_dat, nperm=200, p=.05,
-        consec_pts=5, drug_name='All'):
+        consec_pts=10, drug_name='All'):
+    seed(1)
     idxs = len(drug_sub_dat['Control'][0])
     q = 1-p
 

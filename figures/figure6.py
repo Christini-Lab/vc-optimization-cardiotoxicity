@@ -9,7 +9,7 @@ from itertools import groupby
 import pickle
 import pandas as pd
 import seaborn as sns
-from random import shuffle
+from random import shuffle, seed
 import os
 
 from figs_cell_objects import *
@@ -303,6 +303,7 @@ def plot_fig_6d():
 
 def get_subtracted_functional_t(drug_sub_dat, nperm=200, p=.05,
         consec_pts=5, drug_name='All'):
+    seed(1)
     idxs = len(drug_sub_dat['Control'][0])
     q = 1-p
 
