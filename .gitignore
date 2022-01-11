@@ -9,3 +9,7 @@ figures/exp_data/cells/*
 figures/exp_data/ga_results/*
 figures/exp_data/hcn_results/*
 figures/exp_data.zip
+figures/exp_data/hcn_csv/
+figures/exp_data/ipsc_csv/
+figures/exp_data_small.zip
+figures/exp_data_small/

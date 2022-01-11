@@ -12,7 +12,7 @@ def panel_a():
 
 
     for current in currents:
-        ga_result = pickle.load(open(f'exp_data/ga_results/ga_results_{current}_artefact_True', 'rb'))
+        ga_result = pickle.load(open(f'exp_data/ga_results/vc_proto_{current}', 'rb'))
         best_individual = get_high_fitness(ga_result)
         path = f'{folder}/contribution_plots_2a'
         best_plot_currents(best_individual, path_to_save=path, current_name=current)
@@ -45,15 +45,12 @@ def best_plot_currents(best_ind, path_to_save, current_name):
 
 
 def panel_b():
-    path_to_data = f"fig2-data/"
+    path_to_data = f"exp_data/ga_results"
 
     files = listdir(path_to_data)
-    file_name = 'shortened_trial_steps_ramps_200_50_4_-120_60_500_artefact_True_short.pkl'
 
-    for f in files:
-        if ('shorten' in f) and ('pkl' in f):
-            file_name = f
-    
+    file_name = 'optimized_vc_proto.pkl'
+
     short_protocol = pickle.load(open(f"exp_data/ga_results/{file_name}", 'rb'))
 
     print(f'The protocol is {short_protocol.get_voltage_change_endpoints()[-1]} ms')

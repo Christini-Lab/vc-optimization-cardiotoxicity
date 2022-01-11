@@ -11,12 +11,12 @@ import figs_heka_reader as heka_reader
 
 
 def step_1():
-    path_to_data = f"fig1-data/"
+    path_to_data = f"./exp_data/ga_results"
 
     files = listdir(path_to_data)
 
     for f in files:
-        if ('shorten' in f) and ('pkl' in f):
+        if 'optim' in f:
             file_name = f
     
     short_protocol = pickle.load(open(f"{path_to_data}/{file_name}", 'rb'))
@@ -33,7 +33,7 @@ def step_1():
 
 def step_2():
     path = 'exp_data'
-    f = '7_042721_4_alex_quinine'
+    f = '042721_4_quinine'
     drug = 'quinine'
     cell = ExpDat(path, f, drug)
 

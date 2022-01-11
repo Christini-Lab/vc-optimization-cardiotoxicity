@@ -23,7 +23,7 @@ def moving_average(x, n=10):
 
 def figure4_ad():
     files, cell_objects = get_cell_objects()
-    for k_dr, which_cell in {'Cisapride': 6, 'Verapamil': 12, 'Quinidine': 29,
+    for k_dr, which_cell in {'Cisapride': 6, 'Verapamil': 19, 'Quinidine': 29,
             'Quinine': 37}.items():
         cell = cell_objects[which_cell]
 

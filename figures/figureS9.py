@@ -36,7 +36,7 @@ max_k_currs = tr_k.current_response_info.get_max_current_contributions(
         time=tr_k.t, window=10, step_size=5)
 max_p_currs = tr_p.current_response_info.get_max_current_contributions(
         time=tr_p.t, window=.010, step_size=.005)
-
+print(max_k_currs)
 combined_currs = []
 kernik_currs = []
 paci_currs = []

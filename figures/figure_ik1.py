@@ -27,14 +27,14 @@ def moving_average(x, n=10):
     return np.array(new_vals)
 
 
-def plot_fig_6ab():
+def plot_fig_ab():
     files, cell_objects = get_cell_objects()
-    which_cell = 37
+    which_cell = 25
 
     cell = cell_objects[which_cell]
 
     col = ['k', 'r']
-    label = ['No Drug', 'Quinine']
+    label = ['No Drug', 'Quinidine']
     type_trial = 'vcp_70_70'
 
     fig, axs = plt.subplots(2, 1, sharex=True, figsize=(12, 8))
@@ -78,7 +78,7 @@ def plot_fig_6ab():
     plt.rcParams['svg.fonttype'] = 'none'
     plt.legend()
 
-    plt.savefig(f'./fig6-data/whole_vcp.svg', format='svg')
+    plt.savefig(f'./figik1-data/whole_vcp.svg', format='svg')
     plt.show()
     
 
@@ -95,8 +95,8 @@ def plot_fig_6ab():
         t = moving_average(dat['Time (s)'].values, window)
         c = moving_average(dat['Current (pA/pF)'].values, window)
 
-        min_idx = np.abs(t - 3.5).argmin()
-        max_idx = np.abs(t - 6.5).argmin()
+        min_idx = np.abs(t - 3.85).argmin()
+        max_idx = np.abs(t - 4).argmin()
 
         ax.plot(t[min_idx:max_idx]*1000, c[min_idx:max_idx], col[i], label=label[i])
 
@@ -112,11 +112,11 @@ def plot_fig_6ab():
     plt.rcParams['svg.fonttype'] = 'none'
     plt.legend()
 
-    plt.savefig(f'./fig6-data/zoomed_vcp.svg', format='svg')
+    plt.savefig(f'./figik1-data/zoomed_vcp.svg', format='svg')
     plt.show()
 
 
-def plot_fig_6c(p_val=.05):
+def plot_fig_c(p_val=.05):
     files, cell_objects = get_cell_objects()
 
     drug_switch = {'c': 'Cisapride',
@@ -125,7 +125,7 @@ def plot_fig_6c(p_val=.05):
                    'qn': 'Quinine',
                    'a': 'All'}
 
-    which_drug = 'qn'
+    which_drug = 'All'
 
     fig, axs = plt.subplots(3, 1, sharex=True, figsize=(12, 8))
 
@@ -138,12 +138,11 @@ def plot_fig_6c(p_val=.05):
     for i, cell_object in enumerate(cell_objects):
         drug_type = cell_object.drug
 
-        idx_range = [35000, 65000]
+        idx_range = [38800, 39000]
 
         vc_dat = cell_object.get_vc_data()
 
         recorded_data = vc_dat['Pre-drug'][idx_range[0]:idx_range[1]]
-
 
         dat = cell_object.get_subtracted_drug_data('pred_comp')
         dat = (dat.iloc[idx_range[0]:idx_range[1]]
@@ -154,26 +153,25 @@ def plot_fig_6c(p_val=.05):
 
 
     spans = get_subtracted_functional_t(drug_sub_dat, p=p_val,
-             consec_pts=15, drug_name=drug_switch[which_drug])
+             consec_pts=15)
 
     lab = r'Quinine $\mu_{\Delta I_m}$ p<' + f'{p_val}'
 
-    drug_spans = [spans['Quinine']]
-    col = 'b'
+    drug_spans = [spans['Cisapride'], spans['Verapamil'], spans['Quinidine'], spans['Quinine']]
+    cols = ['c', 'r', 'g', 'b']
 
     axs[0].plot(recorded_data['Time (s)']*1000,
             recorded_data['Voltage (V)']*1000)
 
     mod_k = kernik.KernikModel(is_exp_artefact=True)
-    proto = pickle.load(open('exp_data/ga_results/optimized_vc_proto.pkl', 'rb'))
+    proto = pickle.load(open('exp_data/ga_results/shortened_trial_steps_ramps_200_50_4_-120_60_500_artefact_True_short.pkl', 'rb'))
     trk = mod_k.generate_response(proto, is_no_ion_selective=False)
     t_mod = trk.t
-    i_mod = trk.current_response_info.get_current('I_F')
+    i_mod = trk.current_response_info.get_current('I_K1')
 
-    min_idx = np.abs(t_mod - 3900).argmin()
-    max_idx = np.abs(t_mod - 6900).argmin()
+    min_idx = np.abs(t_mod - 4280).argmin()
+    max_idx = np.abs(t_mod - 4300).argmin()
 
-    #axs[0].plot(t_mod[min_idx:max_idx]-400, trk.command_voltages[min_idx:max_idx])
     axs[2].plot(t_mod[min_idx:max_idx]-400, i_mod[min_idx:max_idx])
     axs[2].axhline(0, color='grey')
 
@@ -182,7 +180,7 @@ def plot_fig_6c(p_val=.05):
             axs[0].axvspan(
                     recorded_data['Time (s)'].values[span[0]]*1000,
                     recorded_data['Time (s)'].values[span[1]]*1000,
-                    color=col, alpha=.2)
+                    color=cols[i], alpha=.2)
 
     i = -1
 
@@ -198,11 +196,12 @@ def plot_fig_6c(p_val=.05):
             avg_arr, color=drug_cols['Control'],
             label=f'Control (n={num_cells["Control"]})')
 
-    avg_arr = np.array(drug_sub_dat[drug_switch[which_drug]]).mean(0)
+    for which_drug in ['c', 'v', 'qd', 'qn']:
+        avg_arr = np.array(drug_sub_dat[drug_switch[which_drug]]).mean(0)
 
-    axs[1].plot(recorded_data['Time (s)']*1000,
-            avg_arr, color=drug_cols[drug_switch[which_drug]],
-            label=f'{drug_switch[which_drug]} (n={num_cells[drug_switch[which_drug]]})')
+        axs[1].plot(recorded_data['Time (s)']*1000,
+                avg_arr, color=drug_cols[drug_switch[which_drug]],
+                label=f'{drug_switch[which_drug]} (n={num_cells[drug_switch[which_drug]]})')
 
     for ax in axs:
         ax.spines['right'].set_visible(False)
@@ -216,15 +215,15 @@ def plot_fig_6c(p_val=.05):
     axs[1].set_ylim(-2.5, 2.5)
 
     axs[2].set_xlabel('Time (ms)', fontsize=14)
-    axs[2].set_ylabel('iPSC-CM Model I_F', fontsize=14)
+    axs[2].set_ylabel('iPSC-CM Model I_K1', fontsize=14)
 
     axs[0].legend(loc=1)
     axs[1].legend(loc=1)
-    plt.savefig(f'./fig6-data/funny_model.svg', format='svg')
+    plt.savefig(f'./figik1-data/ik1_model.svg', format='svg')
     plt.show()
 
 
-def plot_fig_6d():
+def plot_fig_d():
     drug_change_data = pd.read_csv('exp_data/cell_change_stats.csv')
 
     feature_significance = []
@@ -255,7 +254,7 @@ def plot_fig_6d():
     # 'vc_weird_k' 'dvdt_max' 'rmp' 'apa' 'apd10' 'apd20' 'apd30' 'apd60'
     # 'apd90' 'triangulation': []
 
-    for feature in ['vc_f_avg_change']:
+    for feature in ['vc_k1_avg_change']:
         fig, ax = plt.subplots(1, 1, figsize=(12, 8))
 
         drug_change_data[feature] = drug_change_data[feature]
@@ -296,8 +295,8 @@ def plot_fig_6d():
         ax.set_ylabel(f'Change in I_F Segment (pA/pF)', fontsize=18)
         plt.xticks(fontsize=14)
         plt.yticks(fontsize=14)
-        plt.title(f'Change in I_F Segment', fontsize=18)
-        plt.savefig(f'./fig6-data/{feature}.svg', format='svg')
+        plt.title(f'Change in I_k1 Segment', fontsize=18)
+        plt.savefig(f'./figik1-data/{feature}.svg', format='svg')
         plt.show()
 
 
@@ -373,9 +372,9 @@ def get_subtracted_functional_t(drug_sub_dat, nperm=200, p=.05,
 
 
 def main():
-    plot_fig_6ab()
-    plot_fig_6c()
-    plot_fig_6d()
+    #plot_fig_ab()
+    #plot_fig_c()
+    plot_fig_d()
 
 
 if __name__ == '__main__':
