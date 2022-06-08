@@ -12,7 +12,7 @@ def panel_a():
 
 
     for current in currents:
-        ga_result = pickle.load(open(f'exp_data/ga_results/vc_proto_{current}', 'rb'))
+        ga_result = pickle.load(open(f'exp_data/ga_results/ga_results_{current}.pkl', 'rb'))
         best_individual = get_high_fitness(ga_result)
         path = f'{folder}/contribution_plots_2a'
         best_plot_currents(best_individual, path_to_save=path, current_name=current)

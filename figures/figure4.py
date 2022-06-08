@@ -23,8 +23,9 @@ def moving_average(x, n=10):
 
 def figure4_ad():
     files, cell_objects = get_cell_objects()
-    for k_dr, which_cell in {'Cisapride': 6, 'Verapamil': 19, 'Quinidine': 29,
+    for k_dr, which_cell in {'Cisapride': 1, 'Verapamil': 19, 'Quinidine': 29,
             'Quinine': 37}.items():
+        print(files[which_cell])
         cell = cell_objects[which_cell]
 
         col = ['k', 'r']
@@ -44,10 +45,12 @@ def figure4_ad():
                 continue
             
             window = 10
-            t = moving_average(dat['Time (s)'].values[1000:4000], window)
-            t_c = moving_average(dat['Time (s)'].values[1000:4000], 2)
-            c = moving_average(dat['Current (pA/pF)'].values[1000:4000], 2)
-            v = moving_average(dat['Voltage (V)'].values[1000:4000], window)
+            start = 1000
+            end= 4000
+            t = moving_average(dat['Time (s)'].values[start:end], window)
+            t_c = moving_average(dat['Time (s)'].values[start:end], 2)
+            c = moving_average(dat['Current (pA/pF)'].values[start:end], 2)
+            v = moving_average(dat['Voltage (V)'].values[start:end], window)
 
             #axs[1].plot(t_c*1000, c, col[i], label=label[i])
             ax.plot(t*1000, v*1000, col[i], label=label[i])

@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from scipy import signal
 from scipy.optimize import curve_fit
+from scipy.stats import ttest_ind
 
 import figs_heka_reader as heka_reader
 
@@ -167,7 +168,7 @@ def get_pharm_dat(f, ch, is_shown=False):
         plt.legend()
         plt.show()
 
-    return conc_block_pts, drug_trace_dat, np.array(conc_block_dat)
+    return conc_block_pts, drug_trace_dat, np.array(conc_block_dat), avg_curr_dat[0][0], avg_curr_dat[0][-1]
 
 
 def smooth_trace(x, w=200):
@@ -366,6 +367,8 @@ all_drug_traces = []
 all_iv_traces = []
 all_iv_dat = []
 all_iv_tail = []
+all_max_zero = []
+all_max_dmso = []
 
 plt.rcParams['svg.fonttype'] = 'none'
 
@@ -374,14 +377,19 @@ for f, v in file_dat.items():
         file_channel = f'File: {f}, Channel: {ch}'
         print(file_channel)
         iv_traces, iv_dat, iv_tail = get_iv_dat(f, ch)
-        conc_block_pts, drug_trace_dat, conc_block_dat = get_pharm_dat(
-                f, ch)
+        conc_block_pts, drug_trace_dat, conc_block_dat, max_zero, max_dmso = get_pharm_dat( f, ch)
         all_conc_pts.append(conc_block_pts)
         all_drug_traces.append(drug_trace_dat)
+
+        all_max_zero.append(max_zero)
+        all_max_dmso.append(max_dmso)
 
         all_iv_traces.append(iv_traces)
         all_iv_dat.append(iv_dat)
         all_iv_tail.append(iv_tail)
+
+#t-test DMSO vs 0 conc
+#ttest_ind(all_max_zero, all_max_dmso)
 
 #fig, axs = plt.subplots(3, 2, figsize=(12, 8),
 #        gridspec_kw={'height_ratios': [1, 3, 4]})

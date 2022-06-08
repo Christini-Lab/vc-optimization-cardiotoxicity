@@ -225,7 +225,7 @@ class ExpDat():
                     is_filtered=True, t_range=v[1])
             if is_paced:
                 ap1 = find_peaks(-recorded_data['Current (pA/pF)'].values,
-                        height=0, distance=1000)[0][1]
+                        height=0, distance=1000)[0][5]
 
                 new_dat = recorded_data.iloc[ap1-1500:ap1+4000].copy()
 

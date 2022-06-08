@@ -13,3 +13,10 @@ figures/exp_data/hcn_csv/
 figures/exp_data/ipsc_csv/
 figures/exp_data_small.zip
 figures/exp_data_small/
+figures/test-*
+figures/biophys/*
+figures/biophysics_sim.py
+figures/bjp_figures.zip
+mod_kernik_cc_seal.py
+figures/models-vs-vc.py
+
