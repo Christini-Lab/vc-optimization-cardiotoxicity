@@ -85,6 +85,7 @@ def run_ga(ga_params, toolbox):
 
     return new_current_result
 
+
 def _evaluate(eval_input):
     """Evaluates the fitness of an individual.
 
@@ -104,6 +105,7 @@ def _evaluate(eval_input):
 
     return fitness
 
+
 def _mate(
         i_one: genetic_algorithm_results.VCOptimizationIndividual,
         i_two: genetic_algorithm_results.VCOptimizationIndividual) -> None:
@@ -122,13 +124,13 @@ def _mate(
             i_one.protocol.steps[i], i_two.protocol.steps[rand_steps[i]] = (
                 i_two.protocol.steps[rand_steps[i]], i_one.protocol.steps[i])
 
+
 def _mutate(
         individual: genetic_algorithm_results.VCOptimizationIndividual
 ) -> None:
     """Mutates an individual by choosing a number for norm. distribution."""
     individual = individual[0]
     for i in range(len(individual.protocol.steps)):
-
         if random.random() < VCGA_PARAMS.config.gene_mutation_probability:
             individual.protocol.steps[i].mutate(VCGA_PARAMS)
 

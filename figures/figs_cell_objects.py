@@ -225,7 +225,7 @@ class ExpDat():
                     is_filtered=True, t_range=v[1])
             if is_paced:
                 ap1 = find_peaks(-recorded_data['Current (pA/pF)'].values,
-                        height=0, distance=1000)[0][1]
+                        height=0, distance=1000)[0][5]
 
                 new_dat = recorded_data.iloc[ap1-1500:ap1+4000].copy()
 
@@ -1164,8 +1164,8 @@ class ExpDat():
         """
         curr_dict = {
                 'I_K_weird': [.610, 1.200, 'max'],
-                'I_Kr_1': [1.26, 1.264, 'avg'],
-                'I_Kr_2': [1.267, 1.272, 'avg'],
+                'I_Kr_1': [1.26, 1.265, 'avg'],
+                'I_Kr_2': [1.265, 1.270, 'avg'],
                 'I_CaL': [1.975, 1.985, 'avg'],
                 'I_Na': [2.750, 2.770, 'min'],
                 'I_To': [3.640, 3.650, 'avg'],

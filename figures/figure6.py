@@ -165,7 +165,7 @@ def plot_fig_6c(p_val=.05):
             recorded_data['Voltage (V)']*1000)
 
     mod_k = kernik.KernikModel(is_exp_artefact=True)
-    proto = pickle.load(open('exp_data/ga_results/shortened_trial_steps_ramps_200_50_4_-120_60_500_artefact_True_short.pkl', 'rb'))
+    proto = pickle.load(open('exp_data/ga_results/optimized_vc_proto.pkl', 'rb'))
     trk = mod_k.generate_response(proto, is_no_ion_selective=False)
     t_mod = trk.t
     i_mod = trk.current_response_info.get_current('I_F')

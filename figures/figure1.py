@@ -11,19 +11,30 @@ import figs_heka_reader as heka_reader
 
 
 def step_1():
-    path_to_data = f"fig1-data/"
+    path_to_data = f"./exp_data/ga_results"
 
     files = listdir(path_to_data)
 
     for f in files:
-        if ('shorten' in f) and ('pkl' in f):
+        if 'optim' in f:
             file_name = f
     
-    short_protocol = pickle.load(open(f"{path_to_data}/{file_name}", 'rb'))
+    #short_protocol = pickle.load(open(f"{path_to_data}/{file_name}", 'rb'))
 
-    print(f'The protocol is {short_protocol.get_voltage_change_endpoints()[-1]} ms')
+    dat = pd.read_csv(f'{path_to_data}/optimized_vc_proto.csv')
 
-    short_protocol.plot_voltage_clamp_protocol(is_plotted=False)
+    print(f'The protocol is {dat["Times (ms)"].max()} ms')
+
+    fig, ax = plt.subplots(1, 1, figsize=(12, 5))
+
+    ax.plot(dat['Times (ms)'], dat['Voltages (mV)'], 'k')
+
+    ax.spines['right'].set_visible(False)
+    ax.spines['top'].set_visible(False)
+
+    ax.set_xlabel('Time (ms)')
+    ax.set_ylabel('Voltage (mV)')
+
 
     plt.rcParams['svg.fonttype'] = 'none'
 
@@ -33,7 +44,7 @@ def step_1():
 
 def step_2():
     path = 'exp_data'
-    f = '7_042721_4_alex_quinine'
+    f = '042721_4_quinine'
     drug = 'quinine'
     cell = ExpDat(path, f, drug)
 
@@ -353,7 +364,11 @@ def smooth_trace(x, w=200):
     return trace
 
 
-if __name__ == '__main__':
+def main():
     step_1()
     step_2()
     step_5()
+
+
+if __name__ == '__main__':
+    main()

@@ -9,3 +9,14 @@ figures/exp_data/cells/*
 figures/exp_data/ga_results/*
 figures/exp_data/hcn_results/*
 figures/exp_data.zip
+figures/exp_data/hcn_csv/
+figures/exp_data/ipsc_csv/
+figures/exp_data_small.zip
+figures/exp_data_small/
+figures/test-*
+figures/biophys/*
+figures/biophysics_sim.py
+figures/bjp_figures.zip
+mod_kernik_cc_seal.py
+figures/models-vs-vc.py
+figures/figure_ik1_old.py
