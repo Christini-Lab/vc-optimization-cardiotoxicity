@@ -15,7 +15,7 @@
 
 ---
 
-You can use this data to reproduce figures from the paper with code from this repository: "[VC Protocol Optimization for Cardiotoxicity Screening](https://github.com/Christini-Lab/vc-optimization-cardiotoxicity)." To do this, place all of the data in `/figures/exp_data`. 
+You can use this data to reproduce figures from the paper with code on GitHub (https://github.com/Christini-Lab/vc-optimization-cardiotoxicity). To do this, place all of the data in `/figures/exp_data`. 
 
 
 **This dataset contains the following files and folders:**
