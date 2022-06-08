@@ -1,4 +1,8 @@
-## VC Protocol Optimization for Cardiotoxicity Screening
+## An in silico-in vitro pipeline for drug cardiotoxicity screening identifies ionic proarrhythmia mechanisms
+
+---
+
+By: Alexander P. Clark, Siyu Wei, Darshan Kalola, Trine Krogh-Madsen, David J. Christini
 
 #### Run the VC optimization GA and visualize the results
 1. Run the GA with `ga_run.py`. The results are saved to `ga_results/trial_steps_ramps_Kernik_200_51_4_-120_60`.
