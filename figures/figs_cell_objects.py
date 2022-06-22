@@ -13,6 +13,7 @@ import numpy as np
 from scipy.signal import argrelextrema, find_peaks
 import xlrd
 import re
+import pandas as pd
 
 
 class ExpDat():
@@ -20,7 +21,7 @@ class ExpDat():
         self.path = path
         self.f_name = f_name
         self.h5file = h5py.File(f'{path}/cells/{f_name}.h5', 'r')
-        self.xl_file = f'{path}/cell_metadata/{f_name}.xlsx' 
+        self.xl_file = f'{path}/cell_metadata/{f_name}.csv' 
         self.drug = drug
 
         self.set_trials()
@@ -29,34 +30,39 @@ class ExpDat():
         
 
     def set_trials(self):
-        workbook = xlrd.open_workbook(self.xl_file)
-
-        sheet = workbook.sheet_by_name('Sheet1')
+        df = pd.read_csv(self.xl_file, header=None)
 
         all_exp_data = {'Pre-drug':{}, 'Post-drug': {}, 'Washoff': {},
                 'Compensation': {}}
 
-        for rownum in range(sheet.nrows):
-            if sheet.cell(rownum, 0).value in ['Pre-drug', 'Post-drug',
+        for i, row in df.iterrows():
+            if row.values[0] in ['Pre-drug', 'Post-drug',
                     'Washoff', 'Compensation']:
-                stage_key = sheet.cell(rownum, 0).value
+                stage_key = row.values[0]
 
-            if isinstance(sheet.cell(rownum, 1).value, float):
-                trial = sheet.row_slice(rownum, 0, 4)
-                t_name = trial[0].value
-                if trial[2].value != '':
-                    dat = [int(trial[1].value)]
-                    rng_vals = re.split('\[|,|\]',
-                            trial[2].value.replace(' ', ''))
-                    rng = [float(rng_vals[1]), float(rng_vals[2])]
-                    dat.append(rng)
+            if pd.isna(row.values[1]):
+                continue
 
-                    if trial[3].value != '':
-                        dat.append(trial[3].value)
-                else:
-                    dat = int(trial[1].value)
+            if row.values[1] == 'Trial':
+                continue
 
-                all_exp_data[stage_key][t_name] = dat
+            if '[' in row.values[1]:
+                continue
+
+            trial = row.iloc[0:4].values
+            t_name = trial[0]
+            if not pd.isna(trial[2]):
+                dat = [int(float(trial[1]))]
+                rng_vals = re.split('\[|,|\]', trial[2].replace(' ', ''))
+                rng = [float(rng_vals[1]), float(rng_vals[2])]
+                dat.append(rng)
+
+                if not pd.isna(trial[2]):
+                    dat.append(trial[3])
+            else:
+                dat = int(float(trial[1]))
+
+            all_exp_data[stage_key][t_name] = dat
         
         self.trials = all_exp_data
 
@@ -112,16 +118,19 @@ class ExpDat():
 
 
     def set_artefact_params(self):
-        workbook = xlrd.open_workbook(self.xl_file)
-        sheet = workbook.sheet_by_name('Sheet1')
+        #workbook = xlrd.open_workbook(self.xl_file)
+        #sheet = workbook.sheet_by_name('Sheet1')
+        df = pd.read_csv(self.xl_file, header=None)
 
         all_params = []
         for rownum in range(1, 10):
-            if sheet.cell(rownum, 6).value == '':
+            if pd.isna(df.iloc[rownum, 6]):
                 break
 
-            artefact_params = [v.value for v in sheet.row_slice(rownum, 6, 10)]
+            artefact_params = [float(v) for v in df.iloc[rownum, 6:10]]
             artefact_params[0] = int(artefact_params[0])
+
+
             all_params.append(artefact_params)
         
         self.artefact_parameters = np.array(all_params)

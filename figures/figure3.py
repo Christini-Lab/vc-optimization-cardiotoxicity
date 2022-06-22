@@ -22,7 +22,8 @@ def moving_average(x, n=10):
 
 def plot_fig_3ab():
     path = 'exp_data'
-    files = ['021921_1_control',
+    files = [
+            '021921_1_control',
              '031521_2_verapamil',
              '031721_3_verapamil',
              '033021_4_control',

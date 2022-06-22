@@ -86,7 +86,7 @@ def get_iv_dat(f, ch, is_shown=False):
 def get_pharm_dat(f, ch, is_shown=False):
     file_name = f'exp_data/hcn_results/{f}.dat'
     bundle = heka_reader.Bundle(file_name)
-    pharm_meta = pd.read_csv(f'./exp_data/hcn_results/{f}_1HCNPharm.xls', sep='\t', index_col=False)
+    pharm_meta = pd.read_csv(f'./exp_data/hcn_results/{f}_1HCNPharm.csv', index_col=False)
 
     avg_curr_dat = {}
     drug_trace_dat = {}
