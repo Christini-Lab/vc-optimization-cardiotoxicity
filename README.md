@@ -21,5 +21,5 @@ shortened_trial_steps_ramps_Kernik_200_50_4_-120_60_holding_500_True.csv
 #### Plot manuscript figures
 
 1. `cd` into `/figures`. 
-2. Download all raw experimental data from [HERE](www.FILLTHISIN.com) and extract the data inside `/figures`.
+2. Download all raw experimental data from [HERE](https://ecommons.cornell.edu/handle/1813/111336) and extract the data inside `/figures`.
 3. Run figure scripts to generate plots for all main manuscript and supplemental figures.

@@ -442,8 +442,8 @@ class ExpDat():
         dats = self.get_vc_data()
 
 
-        axs[0].plot(data_dict['data_nd']['Time (s)']*1000,
-                data_dict['data_nd']['Voltage (V)']*1000)
+        axs[0].plot(dats['Pre-drug']['Time (s)']*1000,
+                dats['Pre-drug']['Voltage (V)']*1000)
 
         for i, dat in enumerate(dats):
             col, st, labs = styles[i]
@@ -975,14 +975,14 @@ class ExpDat():
 
         cell_folder = f'{path}/cell_csv/{f_name}'
 
-        pdf = backend_pdf.PdfPages(f'{path}/cell_csv/{f_name}/{self.f_name}.pdf')
+        #pdf = backend_pdf.PdfPages(f'{path}/cell_csv/{f_name}/{self.f_name}.pdf')
 
-        plot_functions = self.select_data_to_plot(return_functions=True)
+        #plot_functions = self.select_data_to_plot(return_functions=True)
 
-        for func in plot_functions:
-            fig = func(is_shown=False)
-            pdf.savefig(fig)
-        pdf.close()
+        #for func in plot_functions:
+        #    fig = func(is_shown=False)
+        #    pdf.savefig(fig)
+        #pdf.close()
 
         if with_csv:
             for k1, v1 in self.trials.items():

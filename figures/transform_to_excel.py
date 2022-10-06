@@ -7,23 +7,32 @@ import matplotlib.pyplot as plt
 
 
 
+def ipsc_to_csv(f_name):
+    types = ['spont']
+    
+    cell = ExpDat('./exp_data', f_name, f_name.split('_')[-1])
+
+    cell.write_cell_data()
+
+        
+
 
 def write_ipsc_to_excel(f_name):
     types = ['paced', 'vcp_70_70']
     
-    cell = ExpDat('./', f_name, f_name.split('_')[-1])
+    cell = ExpDat('./exp_data', f_name, f_name.split('_')[-1])
 
     if f_name not in listdir('./ipsc_csv'):
-        mkdir(f'./ipsc_csv/{f_name}')
+        mkdir(f'./exp_data/new_ipsc_csv/{f_name}')
     else:
-        if not listdir(f'./ipsc_csv/{f_name}'):
+
+        if not listdir(f'./new_ipsc_csv/{f_name}'):
             return
 
 
     for i, type_trial in enumerate(types):
         nd_trial = cell.trials['Pre-drug'][type_trial]
         drug_trial = cell.trials['Post-drug'][type_trial]
-
         if type_trial == 'paced':
             dats = cell.get_single_aps()
         if type_trial == 'spont':
@@ -38,10 +47,10 @@ def write_ipsc_to_excel(f_name):
                 continue
             
             if type_trial == 'vcp_70_70':
-                dat.to_csv(f'./ipsc_csv/{f_name}/{k.lower()}_vc_proto.csv')
+                dat.to_csv(f'./exp_data/new_ipsc_csv/{f_name}/{k.lower()}_vc_proto.csv')
             else:
                 dat.to_csv(
-                        f'./ipsc_csv/{f_name}/{k.lower()}_{type_trial}.csv')
+                        f'.exp_data/new_ipsc_csv/{f_name}/{k.lower()}_{type_trial}.csv')
 
 
 def write_hcn_to_excel():
@@ -154,4 +163,5 @@ def get_iv_dat(f, ch, is_shown=False):
     return  iv_df
 
 
-write_hcn_to_excel()
+#write_hcn_to_excel()
+ipsc_to_csv('021121_1_cisapride')
